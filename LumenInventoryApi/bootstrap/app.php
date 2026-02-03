@@ -6,6 +6,8 @@ require_once __DIR__.'/../vendor/autoload.php';
     dirname(__DIR__)
 ))->bootstrap();
 
+date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -24,8 +26,6 @@ $app = new Laravel\Lumen\Application(
 $app->withFacades();
 
 $app->withEloquent();
-
-$app->configure('services');
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +47,19 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
+
+/*
+|--------------------------------------------------------------------------
+| Register Config Files
+|--------------------------------------------------------------------------
+|
+| Now we will register the "app" configuration file. If the file exists in
+| your configuration directory it will be loaded; otherwise, we'll load
+| the default version. You may register other files below as needed.
+|
+*/
+
+$app->configure('app');
 
 /*
 |--------------------------------------------------------------------------
@@ -92,9 +105,6 @@ $app->singleton(
 | can respond to, as well as the controllers that may handle them.
 |
 */
-$app->singleton(App\Services\InventoryService::class, function ($app) {
-    return new App\Services\InventoryService();
-});
 
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
